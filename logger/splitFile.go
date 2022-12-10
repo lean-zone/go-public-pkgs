@@ -36,10 +36,10 @@ func (p *SplitFile) NextFileName() string {
 	} else {
 		path = path + "/"
 	}
-	bootStr := gBootTime.Format("2006-01-02 15-04-05")
+	timeStr := gBootTime.Format("2006-01-02 15-04-05")
 	indexStr := strconv.Itoa(p.splitIndex)
 	p.splitIndex++
-	return path + p.filePrefix + "-[" + bootStr + "]-" + indexStr + "." + p.fileExt
+	return path + p.filePrefix + "[" + timeStr + "]-" + indexStr + "." + p.fileExt
 }
 
 // OpenNextFile 获取下一个文件
