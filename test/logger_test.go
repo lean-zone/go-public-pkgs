@@ -5,7 +5,7 @@
 package test
 
 import (
-	"go-public-pkgs/logger"
+	"github.com/zhanglin-zl/go-public-pkgs/logger"
 	"testing"
 )
 
