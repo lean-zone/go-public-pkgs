@@ -4,6 +4,11 @@
 
 package functools
 
+// Comparable 通过泛型的Constraint实现可比较数据类型，加上"~"，系统会兼容基类类型
+type Comparable interface {
+	~uint8 | ~uint16 | ~uint32 | ~uint64 | ~int8 | ~int16 | ~int32 | ~int64 | ~float32 | ~float64 | ~string | ~int | ~uint | ~uintptr
+}
+
 func MapSum[K comparable, V int64 | float64](m map[K]V) V {
 	var s V
 	for _, v := range m {
@@ -12,7 +17,7 @@ func MapSum[K comparable, V int64 | float64](m map[K]V) V {
 	return s
 }
 
-func Min[V string | float64](x ...V) V {
+func Min[V Comparable](x ...V) V {
 	if len(x) == 0 {
 		panic("no enough param")
 	} else if len(x) == 1 {
@@ -26,10 +31,9 @@ func Min[V string | float64](x ...V) V {
 		}
 		return minV
 	}
-
 }
 
-func Max[V string | float64](x ...V) V {
+func Max[V Comparable](x ...V) V {
 	if len(x) == 0 {
 		panic("no enough param")
 	} else if len(x) == 1 {
