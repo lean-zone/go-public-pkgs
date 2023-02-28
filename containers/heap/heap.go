@@ -4,7 +4,10 @@
 
 package heap
 
-import "sort"
+import (
+	"sort"
+	"testing"
+)
 
 type Interface interface {
 	sort.Interface
@@ -93,5 +96,25 @@ func Reorder(h Interface) {
 		h.Swap(0, i)
 		i--
 		down(h, 0, i)
+	}
+}
+
+func Verify(h Interface, i int, t *testing.T) {
+	n := h.Len()
+	j1 := 2*i + 1
+	j2 := 2*i + 2
+	if j1 < n {
+		if h.Less(j1, i) {
+			t.Errorf("failed to verify, parent index: %v, leftchild index:%v", i, j1)
+			return
+		}
+		Verify(h, j1, t)
+	}
+	if j2 < n {
+		if h.Less(j2, i) {
+			t.Errorf("failed to verify, parent index: %v, leftchild index:%v", i, j2)
+			return
+		}
+		Verify(h, j2, t)
 	}
 }

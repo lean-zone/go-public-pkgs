@@ -87,23 +87,3 @@ func TestMinHeap(t *testing.T) {
 	Verify(&mh1, 0, t)
 
 }
-
-func Verify(h heap.Interface, i int, t *testing.T) {
-	n := h.Len()
-	j1 := 2*i + 1
-	j2 := 2*i + 2
-	if j1 < n {
-		if h.Less(j1, i) {
-			t.Errorf("failed to verify, parent index: %v, leftchild index:%v", i, j1)
-			return
-		}
-		Verify(h, j1, t)
-	}
-	if j2 < n {
-		if h.Less(j2, i) {
-			t.Errorf("failed to verify, parent index: %v, leftchild index:%v", i, j2)
-			return
-		}
-		Verify(h, j2, t)
-	}
-}
