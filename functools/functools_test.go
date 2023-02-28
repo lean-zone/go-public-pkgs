@@ -14,7 +14,12 @@ type newInt int
 func TestFunctools(t *testing.T) {
 	backNums := []newInt{1, 2}
 	bn := newInt(3)
-	fmt.Println(Min(backNums[0]+1, bn))
+	fmt.Println(Min(backNums[0], bn))
 	fmt.Println(Min(1, 2))
 	fmt.Println(Min("2", "4", "1"))
+
+	fmt.Println(Max(backNums[0], bn))
+	fmt.Println(Max(1, 2))
+	fmt.Println(Max("2", "4", "1"))
+
 }
