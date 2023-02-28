@@ -1,74 +1,97 @@
 // @Author: Michael Lean
 // @E-mail: 1013851072@qq.com
-// @Create Time: UTC +8:00 2023/2/27 19:45:04
+// @Create Time: UTC +8:00 2023/2/28 16:17:17
 
 package heap
 
-import (
-	"github.com/zhanglin-zl/go-public-pkgs/common"
-)
+import "sort"
 
-type Item[T common.GenericComparableType] struct {
-	Key   string
-	Value T
+type Interface interface {
+	sort.Interface
+	Push(x interface{}) // add x as element Len()
+	Pop() interface{}   // remove and return element Len() - 1.
 }
 
-type MaxHeap[T common.GenericComparableType] struct {
-	Data []Item[T]
+func Heapify(h Interface) {
+	n := h.Len()
+	for i := n/2 - 1; i >= 0; i-- {
+		down(h, i, n-1)
+	}
 }
 
-func (mh MaxHeap[T]) Len() int { return len(mh.Data) }
-
-func (mh MaxHeap[T]) Less(i, j int) bool {
-	return (mh.Data)[i].Value > (mh.Data)[j].Value
+func Push(h Interface, x interface{}) {
+	h.Push(x)
+	Up(h, h.Len()-1)
 }
 
-func (mh *MaxHeap[T]) Swap(i, j int) {
-	((*mh).Data)[i], ((*mh).Data)[j] = ((*mh).Data)[j], ((*mh).Data)[i]
+func Pop(h Interface) interface{} {
+	n := h.Len() - 1
+	h.Swap(0, n)
+	down(h, 0, n-1)
+	return h.Pop()
 }
 
-func (mh *MaxHeap[T]) Push(x interface{}) {
-	(*mh).Data = append((*mh).Data, x.(Item[T]))
+func Remove(h Interface, i int) interface{} {
+	n := h.Len() - 1
+	if n != i {
+		h.Swap(i, n)
+		if !down(h, i, n-1) {
+			Up(h, i)
+		}
+	}
+	return h.Pop()
 }
 
-func (mh *MaxHeap[T]) Pop() interface{} {
-	old := (*mh).Data
-	n := len(old)
-	x := old[n-1]
-	(*mh).Data = old[0 : n-1]
-	return x
+func Fix(h Interface, i int) {
+	if !down(h, i, h.Len()-1) {
+		Up(h, i)
+	}
 }
 
-func (mh *MaxHeap[T]) Down(startPos, endPos int) {
+func Up(h Interface, i int) {
+	for {
+		parent := (i - 1) / 2 // parent
+		if i == parent || !h.Less(i, parent) {
+			break
+		}
+		h.Swap(i, parent)
+		i = parent
+	}
+}
+
+func down(h Interface, startPos, endPos int) bool {
 	if startPos > endPos {
 		panic("heap down endPos must be greater or equal startPos!")
 	}
-	parent := startPos
-	tmpItem := ((*mh).Data)[startPos]
-
+	i := startPos
 	for {
-		leftChild := 2*parent + 1
-		if leftChild >= endPos || leftChild < 0 {
+		leftChild := 2*i + 1
+		if leftChild > endPos || leftChild < 0 {
 			break
 		}
 		swapPos := leftChild
-		if rightChild := leftChild + 1; rightChild < endPos && mh.Less(rightChild, leftChild) {
+		if rightChild := leftChild + 1; rightChild <= endPos && h.Less(rightChild, leftChild) {
 			swapPos = rightChild
 		}
-
-		if ((*mh).Data)[swapPos].Value < tmpItem.Value {
+		if !h.Less(swapPos, i) {
 			break
 		}
-		((*mh).Data)[parent] = ((*mh).Data)[swapPos]
-		parent = swapPos
+		h.Swap(i, swapPos)
+		i = swapPos
 	}
-	((*mh).Data)[parent] = tmpItem
+
+	return i > startPos
 }
 
-type MinHeap[T common.GenericComparableType] struct {
-	MaxHeap[T]
-}
+// Reorder : 堆建好了之后，进行堆排序
+func Reorder(h Interface) {
+	if h.Len() <= 1 {
+		return
+	}
 
-func (mh *MinHeap[T]) Less(i, j int) bool {
-	return (mh.Data)[i].Value < (mh.Data)[j].Value
+	for i := h.Len() - 1; i > 0; {
+		h.Swap(0, i)
+		i--
+		down(h, 0, i)
+	}
 }
