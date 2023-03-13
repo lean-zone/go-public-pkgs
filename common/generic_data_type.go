@@ -4,7 +4,7 @@
 
 package common
 
-// GenericComparableType 加上"~"之后，系统会兼容基类类型
+// GenericComparableType After adding "~", the system is compatible with the base class type
 type GenericComparableType interface {
 	~uint8 | ~uint16 | ~uint32 | ~uint64 | ~int8 | ~int16 | ~int32 | ~int64 | ~float32 | ~float64 | ~string | ~int | ~uint | ~uintptr
 }
