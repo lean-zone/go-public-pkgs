@@ -1,4 +1,4 @@
-module github.com/zhanglin-zl/go-public-pkgs
+module github.com/lean-zone/go-public-pkgs
 
 go 1.19
 

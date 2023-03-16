@@ -5,7 +5,7 @@
 package functools
 
 import (
-	"github.com/zhanglin-zl/go-public-pkgs/common"
+	"github.com/lean-zone/go-public-pkgs/common"
 )
 
 func Distance2similarity(dist float32) float32 {

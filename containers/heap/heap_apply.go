@@ -6,8 +6,8 @@ package heap
 
 import (
 	"fmt"
-	"github.com/zhanglin-zl/go-public-pkgs/common"
-	"github.com/zhanglin-zl/go-public-pkgs/functools"
+	"github.com/lean-zone/go-public-pkgs/common"
+	"github.com/lean-zone/go-public-pkgs/functools"
 	"strings"
 )
 
