@@ -27,7 +27,7 @@ func generateData() ([]string, []float32, []string, []float32) {
 	}
 
 	values2 := []float32{
-		5, 36, 34, 32, 21, 39, 33, 28, 29, 26,
+		25, 36, 34, 32, 21, 39, 33, 28, 29, 26,
 		24, 35, 38, 27, 31, 23, 37, 30, 40, 22,
 	}
 
@@ -36,54 +36,65 @@ func generateData() ([]string, []float32, []string, []float32) {
 
 func TestMaxHeap(t *testing.T) {
 	var mh1 = MaxHeap[float32]{}
-	mh1.Data = []Item[float32]{}
+	mh1.Data = []*Item[float32]{}
 
 	keys1, values1, keys2, values2 := generateData()
 
 	for i := 0; i < len(keys1); i++ {
-		heap.Push(&mh1, Item[float32]{
+		heap.Push(&mh1, &Item[float32]{
 			Key:   keys1[i],
 			Value: values1[i],
 		})
 	}
-	fmt.Println(mh1.Data)
-	Verify(&mh1, 0, t)
+	fmt.Println("构建堆成功：")
+	fmt.Println(mh1)
+	Verify(&mh1, 0)
 
-	mh1.Data = []Item[float32]{}
+	SortTopK(&mh1)
+	fmt.Println("排序之后：")
+	fmt.Println(mh1)
+
+	mh1.Data = []*Item[float32]{}
 	for i := 0; i < len(keys2); i++ {
-		heap.Push(&mh1, Item[float32]{
+		heap.Push(&mh1, &Item[float32]{
 			Key:   keys2[i],
 			Value: values2[i],
 		})
 	}
-	fmt.Println(mh1.Data)
-	Verify(&mh1, 0, t)
+	fmt.Println("构建堆成功：")
+	fmt.Println(mh1)
+	Verify(&mh1, 0)
 
+	SortTopK(&mh1)
+	fmt.Println("堆排序之后：")
+	fmt.Println(mh1)
 }
 
 func TestMinHeap(t *testing.T) {
 	var mh1 = MinHeap[float32]{}
-	mh1.Data = []Item[float32]{}
+	mh1.Data = []*Item[float32]{}
 
 	keys1, values1, keys2, values2 := generateData()
 
 	for i := 0; i < 20; i++ {
-		heap.Push(&mh1, Item[float32]{
+		heap.Push(&mh1, &Item[float32]{
 			Key:   keys1[i],
 			Value: values1[i],
 		})
 	}
-	fmt.Println(mh1.Data)
-	Verify(&mh1, 0, t)
+	fmt.Println("构建堆成功：")
+	fmt.Println(mh1)
+	Verify(&mh1, 0)
 
-	mh1.Data = []Item[float32]{}
+	mh1.Data = []*Item[float32]{}
 	for i := 0; i < 20; i++ {
-		heap.Push(&mh1, Item[float32]{
+		heap.Push(&mh1, &Item[float32]{
 			Key:   keys2[i],
 			Value: values2[i],
 		})
 	}
-	fmt.Println(mh1.Data)
-	Verify(&mh1, 0, t)
+	fmt.Println("构建堆成功：")
+	fmt.Println(mh1)
+	Verify(&mh1, 0)
 
 }

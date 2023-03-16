@@ -5,8 +5,8 @@
 package heap
 
 import (
+	"log"
 	"sort"
-	"testing"
 )
 
 type Interface interface {
@@ -86,8 +86,8 @@ func down(h Interface, startPos, endPos int) bool {
 	return i > startPos
 }
 
-// Reorder : 堆建好了之后，进行堆排序
-func Reorder(h Interface) {
+// SortTopK 堆建好了之后，重新排序，利用最大（小）堆获取TopK最小（大）值
+func SortTopK(h Interface) {
 	if h.Len() <= 1 {
 		return
 	}
@@ -99,22 +99,22 @@ func Reorder(h Interface) {
 	}
 }
 
-func Verify(h Interface, i int, t *testing.T) {
+func Verify(h Interface, i int) {
 	n := h.Len()
 	j1 := 2*i + 1
 	j2 := 2*i + 2
 	if j1 < n {
 		if h.Less(j1, i) {
-			t.Errorf("failed to verify, parent index: %v, leftchild index:%v", i, j1)
+			log.Fatalf("failed to verify, parent index: %v, leftchild index:%v", i, j1)
 			return
 		}
-		Verify(h, j1, t)
+		Verify(h, j1)
 	}
 	if j2 < n {
 		if h.Less(j2, i) {
-			t.Errorf("failed to verify, parent index: %v, leftchild index:%v", i, j2)
+			log.Fatalf("failed to verify, parent index: %v, leftchild index:%v", i, j2)
 			return
 		}
-		Verify(h, j2, t)
+		Verify(h, j2)
 	}
 }

@@ -4,7 +4,13 @@
 
 package functools
 
-import "github.com/zhanglin-zl/go-public-pkgs/common"
+import (
+	"github.com/zhanglin-zl/go-public-pkgs/common"
+)
+
+func Distance2similarity(dist float32) float32 {
+	return 1 - dist/2
+}
 
 func MapSum[K comparable, V int64 | float64](m map[K]V) V {
 	var s V
@@ -14,7 +20,7 @@ func MapSum[K comparable, V int64 | float64](m map[K]V) V {
 	return s
 }
 
-func Min[V common.GenericComparableType](x ...V) V {
+func Min[T common.GenericComparableType](x ...T) T {
 	if len(x) == 0 {
 		panic("no enough param")
 	} else if len(x) == 1 {
@@ -30,7 +36,7 @@ func Min[V common.GenericComparableType](x ...V) V {
 	}
 }
 
-func Max[V common.GenericComparableType](x ...V) V {
+func Max[T common.GenericComparableType](x ...T) T {
 	if len(x) == 0 {
 		panic("no enough param")
 	} else if len(x) == 1 {
@@ -46,6 +52,14 @@ func Max[V common.GenericComparableType](x ...V) V {
 	}
 }
 
-func Distance2similarity(dist float32) float32 {
-	return 1 - dist/2
+func Pow(x, n int) int {
+	ans := 1
+	for n != 0 {
+		if n%2 == 1 {
+			ans *= x
+		}
+		x *= x
+		n /= 2
+	}
+	return ans
 }
