@@ -40,7 +40,7 @@ func TestMaxHeap(t *testing.T) {
 	keys1, values1, keys2, values2 := generateData()
 
 	for i := 0; i < len(keys1); i++ {
-		Push(&mh1, MaxHeapItem[float32]{
+		Push(&mh1, &MaxHeapItem[float32]{
 			MinHeapItem[float32]{
 				Key:   keys1[i],
 				Value: values1[i],
@@ -57,7 +57,7 @@ func TestMaxHeap(t *testing.T) {
 
 	mh1 = DataHeap{}
 	for i := 0; i < len(keys2); i++ {
-		Push(&mh1, MaxHeapItem[float32]{
+		Push(&mh1, &MaxHeapItem[float32]{
 			MinHeapItem[float32]{
 				Key:   keys2[i],
 				Value: values2[i],
@@ -79,7 +79,7 @@ func TestMinHeap(t *testing.T) {
 	keys1, values1, keys2, values2 := generateData()
 
 	for i := 0; i < 20; i++ {
-		Push(&mh1, MinHeapItem[float32]{
+		Push(&mh1, &MinHeapItem[float32]{
 			Key:   keys1[i],
 			Value: values1[i],
 		})
@@ -90,7 +90,7 @@ func TestMinHeap(t *testing.T) {
 
 	mh1 = DataHeap{}
 	for i := 0; i < 20; i++ {
-		Push(&mh1, MinHeapItem[float32]{
+		Push(&mh1, &MinHeapItem[float32]{
 			Key:   keys2[i],
 			Value: values2[i],
 		})
@@ -112,7 +112,7 @@ func BenchmarkMaxHeap(b *testing.B) {
 		var mh1 = DataHeap{}
 		keys, values := genRandomData(50000)
 		for j := 0; j < len(keys); j++ {
-			Push(&mh1, MaxHeapItem[float32]{
+			Push(&mh1, &MaxHeapItem[float32]{
 				MinHeapItem[float32]{
 					Key:   keys[j],
 					Value: values[j],
@@ -130,7 +130,7 @@ func BenchmarkMinHeap(b *testing.B) {
 		var mh1 = DataHeap{}
 		keys, values := genRandomData(50000)
 		for j := 0; j < len(keys); j++ {
-			Push(&mh1, MinHeapItem[float32]{
+			Push(&mh1, &MinHeapItem[float32]{
 				Key:   keys[j],
 				Value: values[j],
 			})
