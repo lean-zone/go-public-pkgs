@@ -82,8 +82,8 @@ type MinHeapItem[T common.GenericComparableType] struct {
 	Value T
 }
 
-func (mhi MinHeapItem[T]) LessThan(another ComparableData) bool {
-	return mhi.Value < another.(MinHeapItem[T]).Value
+func (mhi *MinHeapItem[T]) LessThan(another ComparableData) bool {
+	return mhi.Value < another.(*MinHeapItem[T]).Value
 }
 
 func (mhi MinHeapItem[T]) Print() {
@@ -94,6 +94,6 @@ type MaxHeapItem[T common.GenericComparableType] struct {
 	MinHeapItem[T]
 }
 
-func (mhi MaxHeapItem[T]) LessThan(another ComparableData) bool {
-	return mhi.Value > another.(MaxHeapItem[T]).Value
+func (mhi *MaxHeapItem[T]) LessThan(another ComparableData) bool {
+	return mhi.Value > another.(*MaxHeapItem[T]).Value
 }
