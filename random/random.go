@@ -2,7 +2,16 @@ package random
 
 import (
 	"math/rand"
+	"time"
 )
+
+func init() {
+	rand.Seed(time.Now().UnixNano())
+}
+
+func SetSeed(seed int64) {
+	rand.Seed(seed)
+}
 
 func Array1dFloat32(d int) []float32 {
 	var rl []float32
