@@ -8,60 +8,55 @@ import (
 	"fmt"
 	"github.com/lean-zone/go-public-pkgs/common"
 	"github.com/lean-zone/go-public-pkgs/functools"
-	"strings"
 )
 
-type Item[T common.GenericComparableType] struct {
-	Key   string
-	Value T
+type ComparableData interface {
+	LessThan(ComparableData) bool
+	Print()
 }
 
-type MaxHeap[T common.GenericComparableType] struct {
-	Data []*Item[T]
+type DataHeap []ComparableData
+
+func (mh *DataHeap) Len() int { return len(*mh) }
+
+func (mh *DataHeap) Less(i, j int) bool {
+	return (*mh)[i].LessThan((*mh)[j])
 }
 
-func (mh MaxHeap[T]) Len() int { return len(mh.Data) }
-
-func (mh MaxHeap[T]) Less(i, j int) bool {
-	return (mh.Data)[i].Value > (mh.Data)[j].Value
+func (mh *DataHeap) Swap(i, j int) {
+	(*mh)[i], (*mh)[j] = (*mh)[j], (*mh)[i]
 }
 
-func (mh *MaxHeap[T]) Swap(i, j int) {
-	((*mh).Data)[i], ((*mh).Data)[j] = ((*mh).Data)[j], ((*mh).Data)[i]
+func (mh *DataHeap) Push(x interface{}) {
+	*mh = append(*mh, x.(ComparableData))
 }
 
-func (mh *MaxHeap[T]) Push(x interface{}) {
-	(*mh).Data = append((*mh).Data, x.(*Item[T]))
-}
-
-func (mh *MaxHeap[T]) Pop() interface{} {
-	old := (*mh).Data
+func (mh *DataHeap) Pop() interface{} {
+	old := *mh
 	n := len(old)
 	x := old[n-1]
-	(*mh).Data = old[0 : n-1]
+	*mh = old[0 : n-1]
 	return x
 }
 
-func (mh MaxHeap[T]) String() string {
-	var str strings.Builder
-
-	for i := 0; functools.Pow(2, i) < len(mh.Data); i++ {
+func (mh DataHeap) Print() {
+	for i := 0; functools.Pow(2, i) < len(mh); i++ {
 		startIndex := functools.Pow(2, i) - 1
-		endIndex := functools.Min(functools.Pow(2, i+1)-1, len(mh.Data))
+		endIndex := functools.Min(functools.Pow(2, i+1)-1, len(mh))
 		for j := startIndex; j < endIndex; j++ {
-			str.WriteString(fmt.Sprintf("%v ", (*mh.Data[j]).Value))
+			(mh)[j].Print()
 		}
-		str.WriteString("\n")
+		fmt.Println()
 	}
-	return str.String()
+	fmt.Println()
 }
 
-func (mh *MaxHeap[T]) Down(startPos, endPos int) {
+func (mh *DataHeap) Down(startPos, endPos int) {
 	if startPos > endPos {
-		panic("heap down endPos must be greater or equal startPos!")
+		panic("heap down endPos must be greater than or equal to startPos!")
 	}
 	parent := startPos
-	tmpItem := ((*mh).Data)[startPos]
+	tmpItem := (*mh)[startPos]
 
 	for {
 		leftChild := 2*parent + 1
@@ -73,19 +68,32 @@ func (mh *MaxHeap[T]) Down(startPos, endPos int) {
 			swapPos = rightChild
 		}
 
-		if ((*mh).Data)[swapPos].Value < tmpItem.Value {
+		if !(*mh)[swapPos].LessThan(tmpItem) {
 			break
 		}
-		((*mh).Data)[parent] = ((*mh).Data)[swapPos]
+		(*mh)[parent] = (*mh)[swapPos]
 		parent = swapPos
 	}
-	((*mh).Data)[parent] = tmpItem
+	(*mh)[parent] = tmpItem
 }
 
-type MinHeap[T common.GenericComparableType] struct {
-	MaxHeap[T]
+type MinHeapItem[T common.GenericComparableType] struct {
+	Key   string
+	Value T
 }
 
-func (mh *MinHeap[T]) Less(i, j int) bool {
-	return (mh.Data)[i].Value < (mh.Data)[j].Value
+func (mhi MinHeapItem[T]) LessThan(another ComparableData) bool {
+	return mhi.Value < another.(MinHeapItem[T]).Value
+}
+
+func (mhi MinHeapItem[T]) Print() {
+	fmt.Print(fmt.Sprintf("%v ", mhi.Value))
+}
+
+type MaxHeapItem[T common.GenericComparableType] struct {
+	MinHeapItem[T]
+}
+
+func (mhi MaxHeapItem[T]) LessThan(another ComparableData) bool {
+	return mhi.Value > another.(MaxHeapItem[T]).Value
 }

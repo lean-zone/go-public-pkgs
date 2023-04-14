@@ -5,8 +5,8 @@
 package heap
 
 import (
-	"container/heap"
 	"fmt"
+	"github.com/lean-zone/go-public-pkgs/random"
 	"testing"
 )
 
@@ -35,66 +35,152 @@ func generateData() ([]string, []float32, []string, []float32) {
 }
 
 func TestMaxHeap(t *testing.T) {
-	var mh1 = MaxHeap[float32]{}
-	mh1.Data = []*Item[float32]{}
+	var mh1 = DataHeap{}
 
 	keys1, values1, keys2, values2 := generateData()
 
 	for i := 0; i < len(keys1); i++ {
-		heap.Push(&mh1, &Item[float32]{
-			Key:   keys1[i],
-			Value: values1[i],
+		Push(&mh1, MaxHeapItem[float32]{
+			MinHeapItem[float32]{
+				Key:   keys1[i],
+				Value: values1[i],
+			},
 		})
 	}
 	fmt.Println("构建堆成功：")
-	fmt.Println(mh1)
+	mh1.Print()
 	Verify(&mh1, 0)
 
 	SortTopK(&mh1)
 	fmt.Println("排序之后：")
-	fmt.Println(mh1)
+	mh1.Print()
 
-	mh1.Data = []*Item[float32]{}
+	mh1 = DataHeap{}
 	for i := 0; i < len(keys2); i++ {
-		heap.Push(&mh1, &Item[float32]{
-			Key:   keys2[i],
-			Value: values2[i],
+		Push(&mh1, MaxHeapItem[float32]{
+			MinHeapItem[float32]{
+				Key:   keys2[i],
+				Value: values2[i],
+			},
 		})
 	}
 	fmt.Println("构建堆成功：")
-	fmt.Println(mh1)
+	mh1.Print()
 	Verify(&mh1, 0)
 
 	SortTopK(&mh1)
 	fmt.Println("堆排序之后：")
-	fmt.Println(mh1)
+	mh1.Print()
 }
 
 func TestMinHeap(t *testing.T) {
-	var mh1 = MinHeap[float32]{}
-	mh1.Data = []*Item[float32]{}
+	var mh1 = DataHeap{}
 
 	keys1, values1, keys2, values2 := generateData()
 
 	for i := 0; i < 20; i++ {
-		heap.Push(&mh1, &Item[float32]{
+		Push(&mh1, MinHeapItem[float32]{
 			Key:   keys1[i],
 			Value: values1[i],
 		})
 	}
 	fmt.Println("构建堆成功：")
-	fmt.Println(mh1)
+	mh1.Print()
 	Verify(&mh1, 0)
 
-	mh1.Data = []*Item[float32]{}
+	mh1 = DataHeap{}
 	for i := 0; i < 20; i++ {
-		heap.Push(&mh1, &Item[float32]{
+		Push(&mh1, MinHeapItem[float32]{
 			Key:   keys2[i],
 			Value: values2[i],
 		})
 	}
 	fmt.Println("构建堆成功：")
-	fmt.Println(mh1)
+	mh1.Print()
 	Verify(&mh1, 0)
 
+	SortTopK(&mh1)
+	fmt.Println("堆排序之后：")
+	mh1.Print()
+}
+
+func BenchmarkMaxHeap(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		var mh1 = DataHeap{}
+		keys, values := genRandomData(50000)
+		for j := 0; j < len(keys); j++ {
+			Push(&mh1, MaxHeapItem[float32]{
+				MinHeapItem[float32]{
+					Key:   keys[j],
+					Value: values[j],
+				},
+			})
+		}
+	}
+}
+
+func BenchmarkMinHeap(b *testing.B) {
+	b.ReportAllocs()
+	b.ResetTimer()
+
+	for i := 0; i < b.N; i++ {
+		var mh1 = DataHeap{}
+		keys, values := genRandomData(50000)
+		for j := 0; j < len(keys); j++ {
+			Push(&mh1, MinHeapItem[float32]{
+				Key:   keys[j],
+				Value: values[j],
+			})
+		}
+	}
+}
+
+func genRandomData(k int) ([]string, []float32) {
+	var keyId = 0
+	var keyFmt = "%v-CN307151939S@@https://wzdata-api.qizhidao.com/bigtools/big/rk/5186bece5dc22beb2761bebeaa5b0a40/BIDCN307151939S000002.JPG"
+	var keys []string
+	for ki := 0; ki < k; ki++ {
+		keys = append(keys, fmt.Sprintf(keyFmt, keyId))
+		keyId++
+	}
+	values := random.Array1dFloat32(k)
+	return keys, values
+}
+
+type FloatItem float32
+
+func (mhi FloatItem) LessThan(another ComparableData) bool {
+	return mhi < another.(FloatItem)
+}
+
+func (mhi FloatItem) Print() {
+	fmt.Print(fmt.Sprintf("%v ", mhi))
+}
+
+func TestMinHeap2(t *testing.T) {
+	var mh1 = DataHeap{}
+
+	_, values1, _, values2 := generateData()
+
+	for i := 0; i < 20; i++ {
+		Push(&mh1, FloatItem(values1[i]))
+	}
+	fmt.Println("构建堆成功：")
+	mh1.Print()
+	Verify(&mh1, 0)
+
+	mh1 = DataHeap{}
+	for i := 0; i < 20; i++ {
+		Push(&mh1, FloatItem(values2[i]))
+	}
+	fmt.Println("构建堆成功：")
+	mh1.Print()
+	Verify(&mh1, 0)
+
+	SortTopK(&mh1)
+	fmt.Println("堆排序之后：")
+	mh1.Print()
 }

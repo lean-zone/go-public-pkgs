@@ -64,7 +64,7 @@ func Up(h Interface, i int) {
 
 func down(h Interface, startPos, endPos int) bool {
 	if startPos > endPos {
-		panic("heap down endPos must be greater or equal startPos!")
+		panic("the 'endPos' must be greater than or equal to 'startPos'!")
 	}
 	i := startPos
 	for {
@@ -105,14 +105,14 @@ func Verify(h Interface, i int) {
 	j2 := 2*i + 2
 	if j1 < n {
 		if h.Less(j1, i) {
-			log.Fatalf("failed to verify, parent index: %v, leftchild index:%v", i, j1)
+			log.Fatalf("failed to verify, parent index: %v, leftchild index: %v", i, j1)
 			return
 		}
 		Verify(h, j1)
 	}
 	if j2 < n {
 		if h.Less(j2, i) {
-			log.Fatalf("failed to verify, parent index: %v, leftchild index:%v", i, j2)
+			log.Fatalf("failed to verify, parent index: %v, rightchild index: %v", i, j2)
 			return
 		}
 		Verify(h, j2)
